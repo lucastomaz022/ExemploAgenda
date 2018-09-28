@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import modelo.Contato;
+import modelo.dao.ContatoDAO;
+
 /*
  * A anotação @WebServlet substitui o mapeamento do servlet
  * realizado no arquivo web.xml (isso para a versão 3.0 ou
@@ -17,6 +20,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/novoContato")
 public class ServletContato extends HttpServlet{
+	
+	private boolean gravarContato(Contato c){
+		ContatoDAO dao = ContatoDAO.getInstancia();
+		return dao.gravar(c);
+	}
 	
 	@Override
 	protected void service(HttpServletRequest requisicao, 
@@ -28,8 +36,18 @@ public class ServletContato extends HttpServlet{
 		String endereco = requisicao.getParameter("enderecoContato");
 		
 		// Processamento necessário para persistência
+		Contato contato = new Contato();
+		contato.setNome(nome);
+		contato.setEmail(email);
+		contato.setEndereco(endereco);
+		contato.setTelefone(telefone);
 		
-		resposta.sendRedirect("confirmacao.html");
+		if(gravarContato(contato)){
+			resposta.sendRedirect("confirmacao.html");
+		} else {
+			resposta.sendRedirect("erro.html");
+		}
+		
 		
 	}
 
