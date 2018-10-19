@@ -1,5 +1,7 @@
 package modelo.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -44,6 +46,10 @@ public class ContatoDAO {
 		}catch (Exception e) {
 			return false;
 		}
+	}
+	
+	public List<Contato> listarContatos() {
+		return em.createQuery("from " + Contato.class.getName()).getResultList();
 	}
 
 }
