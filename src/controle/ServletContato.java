@@ -30,47 +30,40 @@ public class ServletContato extends HttpServlet{
 		return dao.gravar(c);
 	}
 	
-	private List<String> listarContatos() {
+	private List<Contato> listarContatos() {
 		ContatoDAO dao = ContatoDAO.getInstancia();
 		
 		List<Contato> contatos = dao.listarContatos();
-		List<String> nomes = new ArrayList<String>();
 		
-		for(Contato c : contatos) {
-			nomes.add(c.getNome());
-		}
-		
-		return nomes;
-		
+		return contatos;
 	}
 	
 	@Override
 	protected void service(HttpServletRequest requisicao, 
 			HttpServletResponse resposta) throws ServletException, IOException {
 		
-		/*
-		String nome = requisicao.getParameter("nomeContato");
-		String email = requisicao.getParameter("emailContato");
-		String telefone = requisicao.getParameter("telefoneContato");
-		String endereco = requisicao.getParameter("enderecoContato");
+		String opcao = requisicao.getParameter("opcao");
 		
-		// Processamento necessário para persistência
-		Contato contato = new Contato();
-		contato.setNome(nome);
-		contato.setEmail(email);
-		contato.setEndereco(endereco);
-		contato.setTelefone(telefone);
-		
-		if(gravarContato(contato)){
-			resposta.sendRedirect("confirmacao.html");
-		} else {
-			resposta.sendRedirect("erro.html");
+		if(opcao.equals("cadastrar")) {
+			
+			Contato c = new Contato();
+			
+			c.setNome(requisicao.getParameter("nomeContato"));
+			c.setEmail(requisicao.getParameter("emailContato"));
+			c.setEndereco(requisicao.getParameter("enderecoContato"));
+			c.setTelefone(requisicao.getParameter("telefoneContato"));
+			
+			if(gravarContato(c)){
+				resposta.sendRedirect("confirmacao.html");
+			}
+			
+		} else if(opcao.equals("remover")) {
+			
+		} else if(opcao.equals("listar")){
+			requisicao.getSession().
+				setAttribute("contatos", listarContatos());
+			resposta.sendRedirect("lista.jsp");
 		}
-		*/
-		
-		// Disponibilizar a lista de nomas na sessão
-		requisicao.getSession().setAttribute("listaNomes", listarContatos());
-		resposta.sendRedirect("lista.jsp");
 		
 	}
 
